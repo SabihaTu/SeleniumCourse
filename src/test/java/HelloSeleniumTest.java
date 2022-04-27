@@ -5,6 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ public class HelloSeleniumTest
         //20%
         driver.findElement(By.className("login")).click();
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.findElement(By.id("email_create")).sendKeys("sabihatukulija@gmail.com");
+        driver.findElement(By.id("email_create")).sendKeys("stukulija@gmail.com");
         driver.findElement(By.name("SubmitCreate")).click();
 
         driver.manage().timeouts().implicitlyWait(7,TimeUnit.SECONDS);
@@ -51,6 +52,39 @@ public class HelloSeleniumTest
         driver.findElement(By.id("customer_lastname")).sendKeys("Tukulija");
         driver.findElement(By.id("passwd")).sendKeys("123123");
 
+        Select days = new Select(driver.findElement(By.id("days")));
+        days.selectByValue("24");
+
+        Select months = new Select(driver.findElement(By.id("months")));
+        months.selectByIndex(6);
+
+
+        Select years = new Select(driver.findElement(By.id("years")));
+        years.selectByValue("1978");
+      
+
+        driver.findElement(By.id("firstname")).sendKeys("Sabiha");
+        driver.findElement(By.id("lastname")).sendKeys("Tukulija");
+        driver.findElement(By.id("company")).sendKeys("Endava");
+        driver.findElement(By.id("address1")).sendKeys("Envera Sehovica 11");
+        driver.findElement(By.id("city")).sendKeys("Sarajevo");
+
+        Select states = new Select(driver.findElement(By.id("id_state")));
+        states.selectByIndex(3);
+        driver.findElement(By.id("postcode")).sendKeys("71000");
+
+        Select countries = new Select(driver.findElement(By.id("id_country")));
+        countries.selectByIndex(1);
+
+        driver.findElement(By.id("other")).sendKeys("Napomena 1");
+        driver.findElement(By.id("phone_mobile")).sendKeys("+38761228784");
+        driver.findElement(By.id("alias")).sendKeys("moja adresa");
+
+        // register
+        driver.findElement(By.id("submitAccount")).click();
+
+        // verify sign out
+        Assert.assertTrue(driver.findElement(By.className("logout")).isDisplayed());
     }
 
     @Test
