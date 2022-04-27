@@ -8,6 +8,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
@@ -30,8 +33,9 @@ public class HelloSeleniumTest
     @After
     public void quit()
     {
-     //   driver.quit();
+        driver.quit();
     }
+
 
     @Test
     public void amelaTest()
@@ -61,7 +65,7 @@ public class HelloSeleniumTest
 
         Select years = new Select(driver.findElement(By.id("years")));
         years.selectByValue("1978");
-      
+
 
         driver.findElement(By.id("firstname")).sendKeys("Sabiha");
         driver.findElement(By.id("lastname")).sendKeys("Tukulija");
@@ -85,6 +89,55 @@ public class HelloSeleniumTest
 
         // verify sign out
         Assert.assertTrue(driver.findElement(By.className("logout")).isDisplayed());
+    }
+    @Test
+    public void popularBestsellerCategoryTest()
+    {
+        driver.manage().window().maximize();
+        driver.get("http://automationpractice.com");
+
+
+        List<WebElement> popularList = driver.findElements(By.cssSelector("ul.homefeatured li"));
+
+        List<WebElement> bestSellerList = driver.findElements(By.cssSelector("ul.blockbestsellers li"));
+
+        Assert.assertEquals(popularList.size(), 7);
+        Assert.assertEquals(bestSellerList.size(), 7);
+    }
+
+    @Test
+    public void printedDressTest() {
+
+        String dressesListText = "";
+        driver.manage().window().maximize();
+        driver.get("http://automationpractice.com");
+
+        WebElement element = driver.findElement(By.id("search_query_top"));
+        element.sendKeys("Printed dresses");
+        driver.findElement(By.name("submit_search")).click();
+
+        List<WebElement> dressesList = driver.findElements(By.xpath("//div[@id='center_column']/ul/li"));
+        for (WebElement dress : dressesList) {
+            String justTitle = dress.getText().substring(0, dress.getText().indexOf('$'));
+            dressesListText  = dressesListText + justTitle ;
+          //  System.out.println(dress.getText());
+        }
+        writeToTxtFile(dressesListText);
+    }
+
+    public void writeToTxtFile(String dressesText)
+    {
+        // upis u txt file
+        try
+        {
+            FileWriter myWriter = new FileWriter("printedDresses.txt");
+            myWriter.write(dressesText);
+            myWriter.close();
+            System.out.println("Successfully wrote to the file.");
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 
     @Test
