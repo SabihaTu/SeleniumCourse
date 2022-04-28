@@ -125,6 +125,68 @@ public class HelloSeleniumTest
         writeToTxtFile(dressesListText);
     }
 
+    @Test
+    public void printedSummerDressTest() {
+
+        String dressesListText = "";
+        driver.manage().window().maximize();
+        driver.get("http://automationpractice.com");
+
+        WebElement element = driver.findElement(By.id("search_query_top"));
+        element.sendKeys("Printed dresses");
+        driver.findElement(By.name("submit_search")).click();
+
+        List<WebElement> dressesList = driver.findElements(By.xpath("//div[@id='center_column']/ul/li"));
+
+        WebElement firstDress = dressesList.get(0);
+        firstDress.click();
+
+        Assert.assertTrue(driver.findElement(By.className("btn-twitter")).isDisplayed());
+        Assert.assertTrue(driver.findElement(By.className("btn-facebook")).isDisplayed());
+        Assert.assertTrue(driver.findElement(By.className("btn-google-plus")).isDisplayed());
+        Assert.assertTrue(driver.findElement(By.className("btn-pinterest")).isDisplayed());
+
+        //-5%
+        Assert.assertEquals(driver.findElement(By.id("reduction_percent_display")).getText(), "-5%");
+
+        // change details
+        driver.findElement(By.id("quantity_wanted")).clear();
+        driver.findElement(By.id("quantity_wanted")).sendKeys("3");
+        Select size = new Select(driver.findElement(By.id("group_1")));
+        size.selectByIndex(1);
+
+        driver.findElement(By.id("color_14")).click();
+
+
+        driver.findElement(By.id("add_to_cart")).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("layer_cart_product_quantity"))));
+
+        int quantity1 = Integer.parseInt(driver.findElement(By.id("layer_cart_product_quantity")).getText());
+
+        Assert.assertEquals(3, quantity1);
+        String colorSize = driver.findElement(By.id("layer_cart_product_attributes")).getText();
+
+        int commaIndex = colorSize.indexOf(',');
+        String color = colorSize.substring(0, commaIndex);
+        String sizeM = colorSize.substring(commaIndex+1);
+
+        Assert.assertEquals("Blue", color);
+        Assert.assertEquals("M", sizeM.trim());
+
+        // proceed
+        driver.findElement(By.className("button-medium")).click();
+
+        driver.findElement(By.cssSelector(".cart_navigation clearfix"));
+   /*     WebDriverWait wait2 = new WebDriverWait(driver, 10);
+        wait2.until(ExpectedConditions.elementToBeClickable(driver.findElement
+                (By.cssSelector(".cart_navigation clearfix"))));*/
+
+     //   driver.findElement(By.className("button-medium")).click();
+
+    }
+
     public void writeToTxtFile(String dressesText)
     {
         // upis u txt file
